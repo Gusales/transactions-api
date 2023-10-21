@@ -2,6 +2,7 @@ import { TransactionsType } from '@/@types/TransactionsTypes'
 import { TransactionsRepository } from '@/repositories/transactions-repository'
 import { UserRepository } from '@/repositories/user-repository'
 import { ResourceNotFoundError } from './errors/resorce-not-found-error'
+import { NoHaveCreditsError } from './errors/no-credits-found-error'
 
 interface CreateNewTransactionUseCaseRequest {
   title: string
@@ -29,6 +30,29 @@ export class CreateNewTransactionUseCase {
     const user = await this.userRepository.findById(userId)
     if (!user) {
       throw new ResourceNotFoundError()
+    }
+    const balance = (
+      await this.transactionsRepository.findByUserId(userId)
+    ).reduce(
+      (acc, transaction) => {
+        if (transaction.type === 'income') {
+          acc.income += transaction.value
+          acc.total += transaction.value
+        } else {
+          acc.outcome += transaction.value
+          acc.total -= transaction.value
+        }
+        return acc
+      },
+      {
+        income: 0,
+        outcome: 0,
+        total: 0,
+      },
+    )
+
+    if (type === 'outcome' && balance.total < value) {
+      throw new NoHaveCreditsError()
     }
 
     const newTransaction = await this.transactionsRepository.create({

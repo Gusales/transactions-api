@@ -5,8 +5,9 @@ import { InMemoryTransactionsRepository } from '@/repositories/in-memory-reposit
 import { CreateNewTransactionUseCase } from '@/use-cases/create-transactions'
 import { InMemoryUserRepository } from '@/repositories/in-memory-repository/in-memory-user-repository'
 import { ResourceNotFoundError } from '@/use-cases/errors/resorce-not-found-error'
+import { NoHaveCreditsError } from '@/use-cases/errors/no-credits-found-error'
 
-describe('Register use case', () => {
+describe('Create transaction use case', () => {
   let transactionRepository: InMemoryTransactionsRepository
   let userRepository: InMemoryUserRepository
   let sut: CreateNewTransactionUseCase
@@ -27,11 +28,29 @@ describe('Register use case', () => {
     const { transaction } = await sut.execute({
       title: 'Cadeira Gamer',
       value: 1200,
-      type: 'outcome',
+      type: 'income',
       userId: id,
     })
 
     expect(transaction.id).toEqual(expect.any(String))
+  })
+
+  it('should not be able to create outcome transaction without a valid balance', async () => {
+    const { id } = await userRepository.create({
+      id: randomUUID(),
+      name: 'John Doe',
+      email: 'johndoe@email.com',
+      password: '123456',
+    })
+
+    expect(async () => {
+      await sut.execute({
+        title: 'Cadeira Gamer',
+        value: 1200,
+        type: 'outcome',
+        userId: id,
+      })
+    }).rejects.toBeInstanceOf(NoHaveCreditsError)
   })
 
   it('should not be able to create new transaction without user id', () => {
