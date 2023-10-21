@@ -4,6 +4,7 @@ import { it, expect, describe, beforeEach } from 'vitest'
 import { InMemoryTransactionsRepository } from '@/repositories/in-memory-repository/in-memory-transactions-repository'
 import { CreateNewTransactionUseCase } from '@/use-cases/create-transactions'
 import { InMemoryUserRepository } from '@/repositories/in-memory-repository/in-memory-user-repository'
+import { ResourceNotFoundError } from '@/use-cases/errors/resorce-not-found-error'
 
 describe('Register use case', () => {
   let transactionRepository: InMemoryTransactionsRepository
@@ -12,7 +13,7 @@ describe('Register use case', () => {
   beforeEach(() => {
     transactionRepository = new InMemoryTransactionsRepository()
     userRepository = new InMemoryUserRepository()
-    sut = new CreateNewTransactionUseCase(transactionRepository)
+    sut = new CreateNewTransactionUseCase(transactionRepository, userRepository)
   })
 
   it('should be able to create a new transactions', async () => {
@@ -33,7 +34,16 @@ describe('Register use case', () => {
     expect(transaction.id).toEqual(expect.any(String))
   })
 
-  // it(`should be able to encrypt the user's password before being registered`, async () => {})
+  it('should not be able to create new transaction without user id', () => {
+    expect(async () => {
+      await sut.execute({
+        title: 'Cadeira gamer',
+        type: 'income',
+        userId: '',
+        value: 1200,
+      })
+    }).rejects.toBeInstanceOf(ResourceNotFoundError)
+  })
 
   // it('should not be able to register with same email', async () => {})
 })
