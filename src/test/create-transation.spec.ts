@@ -44,6 +44,4 @@ describe('Register use case', () => {
       })
     }).rejects.toBeInstanceOf(ResourceNotFoundError)
   })
-
-  // it('should not be able to register with same email', async () => {})
 })
