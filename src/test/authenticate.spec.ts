@@ -2,6 +2,7 @@ import { InMemoryUserRepository } from '@/repositories/in-memory-repository/in-m
 import { AuthenticateUseCase } from '@/use-cases/authenticate'
 import { CredentialsError } from '@/use-cases/errors/credentials-error'
 import { hash } from 'bcryptjs'
+import { randomUUID } from 'node:crypto'
 import { describe, it, expect, beforeEach } from 'vitest'
 
 describe('Authenticate use case', () => {
@@ -15,6 +16,7 @@ describe('Authenticate use case', () => {
 
   it('should be able to authenticate', async () => {
     await userRepository.create({
+      id: randomUUID(),
       email: 'johndoe@gmail.com',
       name: 'John Doe',
       password: await hash('123456', 8),
@@ -30,6 +32,7 @@ describe('Authenticate use case', () => {
 
   it('should not be able to authenticate using wrong email', async () => {
     await userRepository.create({
+      id: randomUUID(),
       email: 'johndoe@gmail.com',
       name: 'John Doe',
       password: await hash('123456', 8),
@@ -45,6 +48,7 @@ describe('Authenticate use case', () => {
 
   it('should not be able to authenticate using wrong password', async () => {
     await userRepository.create({
+      id: randomUUID(),
       email: 'johndoe@gmail.com',
       name: 'John Doe',
       password: await hash('123456', 8),
