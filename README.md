@@ -8,9 +8,9 @@
 [  ] Deve ser possível obter o balanço das transações (Total de entrada, total de saída e o cálculo das duas)
 
 ## RN (Regras de Negócio)
-[ x ] O usuário não poderá se registrar com dois e-mails duplicados;
-[ x ] Cada transação deverá possuir dois tipos (<i>income</i> e <i>outcome</i>);
-[  ] Não deve ser possível criar uma nova transação do tipo <i>outcome</i> caso ela ultrapasse o valor total do balanço
+[ x ] O usuário não poderá se registrar com dois e-mails duplicados; <br />
+[ x ] Cada transação deverá possuir dois tipos (<i>income</i> e <i>outcome</i>); <br />
+[  ] Não deve ser possível criar uma nova transação do tipo <i>outcome</i> caso ela ultrapasse o valor total do balanço <br />
 
 ## RNFs (Requisitos não funcionais)
 [] Os dados da aplicação devem estar contidos em um Banco PostgreSQL; <br />
