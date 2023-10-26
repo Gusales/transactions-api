@@ -2,17 +2,17 @@ import { randomUUID } from 'node:crypto'
 import { it, expect, describe, beforeEach } from 'vitest'
 
 import { InMemoryTransactionsRepository } from '@/repositories/in-memory-repository/in-memory-transactions-repository'
-import { ListTransactions } from '@/use-cases/list-transactions'
+import { FetchTransactionsUseCase } from '@/use-cases/fetch-transactions'
 import { InMemoryUserRepository } from '@/repositories/in-memory-repository/in-memory-user-repository'
 
 describe('List transactions use case', () => {
   let transactionRepository: InMemoryTransactionsRepository
   let userRepository: InMemoryUserRepository
-  let sut: ListTransactions
+  let sut: FetchTransactionsUseCase
   beforeEach(() => {
     transactionRepository = new InMemoryTransactionsRepository()
     userRepository = new InMemoryUserRepository()
-    sut = new ListTransactions(transactionRepository, userRepository)
+    sut = new FetchTransactionsUseCase(transactionRepository, userRepository)
   })
 
   it('should be able to list a all user transactions', async () => {
