@@ -1,6 +1,5 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
-import jwt from 'jsonwebtoken'
 
 import { env } from '@/env'
 
@@ -27,15 +26,16 @@ export async function registerController(
       password,
     })
 
-    const token = jwt.sign(
+    const token = await reply.jwtSign(
       {
         user: {
-          id: user.id,
           email: user.email,
         },
       },
-      env.JWT_SECRET,
-      { expiresIn: 60 * 60 * 24 * 30 /* 1 month */ },
+      {
+        sub: user.id,
+        expiresIn: 60 * 60 * 24 * 30 /* 1 month */,
+      },
     )
 
     return reply.code(201).send({ token })

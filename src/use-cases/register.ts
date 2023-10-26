@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import { UserType } from '@/@types/UserType'
 import { UserRepository } from '@/repositories/user-repository'
 import { hash } from 'bcryptjs'
@@ -29,6 +30,7 @@ export class RegisterUseCase {
     }
 
     const user = await this.userRepository.create({
+      id: randomUUID(),
       email,
       name,
       password: password_hash,
