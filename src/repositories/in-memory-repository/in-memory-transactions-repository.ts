@@ -17,6 +17,10 @@ export class InMemoryTransactionsRepository implements TransactionsRepository {
     return newTransaction
   }
 
+  async findManyByUserId(id: string) {
+    return this.transactions.filter((item) => item.userId === id)
+  }
+
   async findByUserId(userId: string, page: number) {
     const transactions = this.transactions
       .filter((item) => item.userId === userId)

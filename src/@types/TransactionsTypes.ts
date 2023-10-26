@@ -3,5 +3,5 @@ export type TransactionsType = {
   title: string
   value: number
   type: 'outcome' | 'income'
-  userId: string
+  userId?: string
 }

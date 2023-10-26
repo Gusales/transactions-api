@@ -32,7 +32,7 @@ export class CreateNewTransactionUseCase {
       throw new ResourceNotFoundError()
     }
     const balance = (
-      await this.transactionsRepository.findByUserId(userId)
+      await this.transactionsRepository.findManyByUserId(userId)
     ).reduce(
       (acc, transaction) => {
         if (transaction.type === 'income') {
