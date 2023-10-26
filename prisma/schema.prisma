@@ -27,7 +27,7 @@ enum TransactionsTypes {
 model Transactions {
   id     String            @id @default(uuid())
   title  String
-  value  String
+  value  Int
   type   TransactionsTypes
   user   User              @relation(fields: [userId], references: [id])
   userId String
