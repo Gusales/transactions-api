@@ -39,8 +39,41 @@ describe('List transactions use case', () => {
 
     const { transactions } = await sut.execute({
       userId: id,
+      page: 1,
     })
 
     expect(transactions.length).toEqual(2)
+  })
+
+  it('should be able to list all user transactions paginated', async () => {
+    const { id } = await userRepository.create({
+      id: randomUUID(),
+      name: 'John Doe',
+      email: 'johndoe@email.com',
+      password: '123456',
+    })
+
+    for (let i = 0; i < 30; i++) {
+      await transactionRepository.create({
+        title: 'Cadeira gamer',
+        type: 'outcome',
+        userId: id,
+        value: 1200,
+      })
+    }
+
+    const page1 = await sut.execute({
+      userId: id,
+      page: 1,
+    })
+
+    const page2 = await sut.execute({
+      userId: id,
+      page: 2,
+    })
+
+    expect(page1.transactions.length).toEqual(20)
+
+    expect(page2.transactions.length).toEqual(10)
   })
 })

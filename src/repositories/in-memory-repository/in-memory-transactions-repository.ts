@@ -17,10 +17,10 @@ export class InMemoryTransactionsRepository implements TransactionsRepository {
     return newTransaction
   }
 
-  async findByUserId(userId: string) {
-    const transactions = this.transactions.filter(
-      (item) => item.userId === userId,
-    )
+  async findByUserId(userId: string, page: number) {
+    const transactions = this.transactions
+      .filter((item) => item.userId === userId)
+      .slice((page - 1) * 20, page * 20)
 
     return transactions
   }
