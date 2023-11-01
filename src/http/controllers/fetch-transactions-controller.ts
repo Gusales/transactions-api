@@ -7,13 +7,13 @@ export async function fetchTransactions(
   reply: FastifyReply,
 ) {
   const fetchQueryParams = z.object({
-    id: z.string().uuid(),
     page: z.string().default('1').transform(Number),
   })
 
   const queryParams = fetchQueryParams.parse(request.query)
+  const { sub } = request.user
 
-  if (isNaN(queryParams.page)) {
+  if (isNaN(queryParams.page) || queryParams.page === 0) {
     return reply
       .code(400)
       .send({ message: 'Please send the page as number type.' })
@@ -23,7 +23,7 @@ export async function fetchTransactions(
     const fetchtransactionsUseCase = makeFetchTransactions()
     const { transactions } = await fetchtransactionsUseCase.execute({
       page: queryParams.page,
-      userId: queryParams.id,
+      userId: sub,
     })
 
     const balance = transactions.reduce(
